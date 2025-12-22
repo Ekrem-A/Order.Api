@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Azure Key Vault integration (for production secrets)
 builder.AddAzureKeyVault();
 
-// Configure Serilog
+// Configure Serilog - replace default logging
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -25,7 +25,8 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog(Log.Logger, dispose: true);
+builder.Logging.ClearProviders(); // Remove default console logger to prevent duplicates
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
