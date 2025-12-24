@@ -13,8 +13,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Azure Key Vault integration (for production secrets)
-builder.AddAzureKeyVault();
+// Railway configuration (DATABASE_URL, PORT)
+builder.ConfigureForRailway();
 
 // Configure Serilog - replace default logging
 Log.Logger = new LoggerConfiguration()

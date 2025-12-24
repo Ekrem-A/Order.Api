@@ -33,8 +33,8 @@ public class OrderDbContextInitializer
                 return;
             }
 
-            // Check if we're using SQL Server (not InMemory)
-            if (_context.Database.IsSqlServer())
+            // Check if we're using PostgreSQL (not InMemory)
+            if (_context.Database.IsNpgsql())
             {
                 _logger.LogInformation("Applying database migrations...");
                 await _context.Database.MigrateAsync();

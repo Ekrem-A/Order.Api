@@ -26,20 +26,20 @@ public class OrderDbContextFactory : IDesignTimeDbContextFactory<OrderDbContext>
 
         if (!string.IsNullOrWhiteSpace(connectionString))
         {
-            optionsBuilder.UseSqlServer(connectionString, sqlOptions =>
+            optionsBuilder.UseNpgsql(connectionString, npgsqlOptions =>
             {
-                sqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
+                npgsqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
             });
         }
         else
         {
             // Fallback for design-time when no connection string is available
             // Use a dummy connection string that will work for migrations generation
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\mssqllocaldb;Database=OrderDb_Design;Trusted_Connection=True;",
-                sqlOptions =>
+            optionsBuilder.UseNpgsql(
+                "Host=localhost;Database=OrderDb_Design;Username=postgres;Password=postgres",
+                npgsqlOptions =>
                 {
-                    sqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
+                    npgsqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
                 });
         }
 

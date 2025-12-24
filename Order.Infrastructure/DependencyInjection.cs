@@ -18,20 +18,20 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Database
+        // Database - PostgreSQL for Railway
         var connectionString = configuration.GetConnectionString("OrderDb");
         
         services.AddDbContext<OrderDbContext>(options =>
         {
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                options.UseSqlServer(connectionString, sqlOptions =>
+                options.UseNpgsql(connectionString, npgsqlOptions =>
                 {
-                    sqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
-                    sqlOptions.EnableRetryOnFailure(
+                    npgsqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
+                    npgsqlOptions.EnableRetryOnFailure(
                         maxRetryCount: 5,
                         maxRetryDelay: TimeSpan.FromSeconds(30),
-                        errorNumbersToAdd: null);
+                        errorCodesToAdd: null);
                 });
             }
             else
@@ -49,8 +49,8 @@ public static class DependencyInjection
         // Services
         services.AddSingleton<IDateTimeService, DateTimeService>();
 
-        // Messaging - Service Bus
-        services.AddSingleton<IEventPublisher, ServiceBusPublisher>();
+        // Messaging - Log-based publisher for Railway (can be replaced with RabbitMQ later)
+        services.AddSingleton<IEventPublisher, LogEventPublisher>();
 
         // Background Jobs
         services.AddHostedService<OutboxProcessorJob>();

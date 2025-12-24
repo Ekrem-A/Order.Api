@@ -29,19 +29,14 @@ WORKDIR /app
 RUN adduser --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-# Expose ports
-EXPOSE 8080
-EXPOSE 8081
-
 # Copy published files
 COPY --from=publish /app/publish .
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/health/live || exit 1
-
-# Set environment variables
-ENV ASPNETCORE_URLS=http://+:8080
+# Railway sets PORT environment variable
+# Application will read PORT and bind to it via RailwayExtensions
 ENV ASPNETCORE_ENVIRONMENT=Production
+
+# Default port (Railway will override via PORT env var)
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "Order.Api.dll"]

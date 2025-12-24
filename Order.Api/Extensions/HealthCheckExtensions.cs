@@ -13,13 +13,13 @@ public static class HealthCheckExtensions
     {
         var healthChecksBuilder = services.AddHealthChecks();
 
-        // Database health check
+        // Database health check - PostgreSQL for Railway
         var dbConnectionString = configuration.GetConnectionString("OrderDb");
         if (!string.IsNullOrWhiteSpace(dbConnectionString))
         {
-            healthChecksBuilder.AddSqlServer(
+            healthChecksBuilder.AddNpgSql(
                 dbConnectionString,
-                name: "sqlserver",
+                name: "postgresql",
                 tags: new[] { "ready", "db" });
         }
         else
@@ -27,17 +27,6 @@ public static class HealthCheckExtensions
             healthChecksBuilder.AddCheck<DatabaseHealthCheck>(
                 "database",
                 tags: new[] { "ready", "db" });
-        }
-
-        // Service Bus health check
-        var serviceBusConnectionString = configuration["ServiceBus:ConnectionString"];
-        if (!string.IsNullOrWhiteSpace(serviceBusConnectionString))
-        {
-            healthChecksBuilder.AddAzureServiceBusTopic(
-                serviceBusConnectionString,
-                configuration["ServiceBus:OrderCreatedTopicName"] ?? "order-created",
-                name: "servicebus",
-                tags: new[] { "ready", "messaging" });
         }
 
         return services;
