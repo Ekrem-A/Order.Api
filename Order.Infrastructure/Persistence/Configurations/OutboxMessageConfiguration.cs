@@ -22,7 +22,7 @@ public class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage
             .HasMaxLength(2000);
 
         builder.HasIndex(o => o.ProcessedOnUtc)
-            .HasFilter("[ProcessedOnUtc] IS NULL");
+            .HasFilter("\"ProcessedOnUtc\" IS NULL");
 
         builder.HasIndex(o => o.OccurredOnUtc);
     }

@@ -21,7 +21,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Domain.Entities.Order
 
         builder.HasIndex(o => new { o.IdempotencyKey, o.UserId })
             .IsUnique()
-            .HasFilter("[IdempotencyKey] IS NOT NULL");
+            .HasFilter("\"IdempotencyKey\" IS NOT NULL");
 
         builder.Property(o => o.Status)
             .IsRequired()
