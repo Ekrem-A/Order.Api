@@ -44,7 +44,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderDbContext>(provider => provider.GetRequiredService<OrderDbContext>());
 
         // Database Initializer
-        services.AddScoped<OrderDbContextInitializer>();
+        
 
         // Services
         services.AddSingleton<IDateTimeService, DateTimeService>();

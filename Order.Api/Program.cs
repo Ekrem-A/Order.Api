@@ -193,13 +193,13 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Initialize database
-using (var scope = app.Services.CreateScope())
-{
-    var initializer = scope.ServiceProvider.GetRequiredService<Order.Infrastructure.Persistence.OrderDbContextInitializer>();
-    await initializer.InitializeAsync();
-    await initializer.SeedAsync();
-}
+//// Initialize database
+//using (var scope = app.Services.CreateScope())
+//{
+//    var initializer = scope.ServiceProvider.GetRequiredService<Order.Infrastructure.Persistence.OrderDbContextInitializer>();
+//    await initializer.InitializeAsync();
+//    await initializer.SeedAsync();
+//}
 
 // Configure the HTTP request pipeline.
 
