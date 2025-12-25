@@ -12,8 +12,8 @@ using Order.Infrastructure.Persistence;
 namespace Order.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20251224223649_Initial_Create")]
-    partial class Initial_Create
+    [Migration("20251225175445_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

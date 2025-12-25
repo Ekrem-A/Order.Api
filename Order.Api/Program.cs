@@ -1,13 +1,15 @@
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models;                 
 using Order.Api.Extensions;
 using Order.Api.Middleware;
 using Order.Api.Services;
 using Order.Application;
 using Order.Application.Common.Interfaces;
 using Order.Infrastructure;
+using Order.Infrastructure.Persistence;
 using Serilog;
 using System.Text;
 
@@ -193,7 +195,26 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-//// Initialize database
+// Apply migrations at startup when configured
+var autoMigrate = builder.Configuration.GetValue<bool>("Database:AutoMigrate");
+if (autoMigrate)
+{
+    using var scope = app.Services.CreateScope();
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
+        Log.Information("Applying database migrations...");
+        db.Database.Migrate();
+        Log.Information("Database migrations applied.");
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, "Failed to apply database migrations");
+        throw;
+    }
+}
+
+//// Initialize database with initializer if you have one (kept for reference)
 //using (var scope = app.Services.CreateScope())
 //{
 //    var initializer = scope.ServiceProvider.GetRequiredService<Order.Infrastructure.Persistence.OrderDbContextInitializer>();
