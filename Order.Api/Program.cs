@@ -35,12 +35,10 @@ builder.Logging.ClearProviders(); // Remove default console logger to prevent du
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-// DataProtection - Configure for containerized environments
-// Since we use JWT (not cookies), DataProtection is not critical
-// This suppresses the warnings about key storage
+// DataProtection - Use ephemeral provider for containerized environments
+// Since we use JWT (not cookies), DataProtection keys don't need to persist
 builder.Services.AddDataProtection()
-    .SetApplicationName("Order.Api")
-    .DisableAutomaticKeyGeneration();
+    .UseEphemeralDataProtectionProvider();
 
 // Add Application and Infrastructure layers
 builder.Services.AddApplication();
