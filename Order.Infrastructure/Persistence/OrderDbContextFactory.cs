@@ -33,10 +33,9 @@ public class OrderDbContextFactory : IDesignTimeDbContextFactory<OrderDbContext>
         }
         else
         {
-            // Fallback for design-time when no connection string is available
-            // Use a dummy connection string that will work for migrations generation
+            // Railway PostgreSQL connection (Npgsql format)
             optionsBuilder.UseNpgsql(
-                "Host=shinkansen.proxy.rlwy.net;Port=49271;Database=railway;Username=postgres;Password=JcIaVIYEwLcCZFcbYparNhUwSfBQttXs;SSL Mode=Require;Trust Server Certificate=true;Timeout=15;Command Timeout=120;",
+                "Host=hopper.proxy.rlwy.net;Port=49271;Database=railway;Username=postgres;Password=JcIaVIYEwLcCZFcbYparNhUwSfBQttXs",
                 npgsqlOptions =>
                 {
                     npgsqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
@@ -46,4 +45,3 @@ public class OrderDbContextFactory : IDesignTimeDbContextFactory<OrderDbContext>
         return new OrderDbContext(optionsBuilder.Options);
     }
 }
-

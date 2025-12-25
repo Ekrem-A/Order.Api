@@ -1,8 +1,9 @@
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;                 
+using Microsoft.OpenApi.Models;
 using Order.Api.Extensions;
 using Order.Api.Middleware;
 using Order.Api.Services;
@@ -33,6 +34,13 @@ builder.Logging.ClearProviders(); // Remove default console logger to prevent du
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+// DataProtection - Configure for containerized environments
+// Since we use JWT (not cookies), DataProtection is not critical
+// This suppresses the warnings about key storage
+builder.Services.AddDataProtection()
+    .SetApplicationName("Order.Api")
+    .DisableAutomaticKeyGeneration();
 
 // Add Application and Infrastructure layers
 builder.Services.AddApplication();

@@ -43,7 +43,8 @@ public static class RailwayExtensions
             var port = uri.Port > 0 ? uri.Port : 5432;
             var database = uri.AbsolutePath.TrimStart('/');
 
-            return $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+            // Npgsql 8.x requires camelCase parameter names without spaces
+            return $"Host={host};Port={port};Database={database};Username={username};Password={password};SslMode=Require;TrustServerCertificate=true";
         }
         catch
         {
@@ -52,4 +53,3 @@ public static class RailwayExtensions
         }
     }
 }
-
