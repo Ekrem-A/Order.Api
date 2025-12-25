@@ -6,7 +6,7 @@ public static class RailwayExtensions
     /// Configures the application for Railway deployment.
     /// Railway sets PORT environment variable for the application.
     /// </summary>
-    public static IHostApplicationBuilder ConfigureForRailway(this IHostApplicationBuilder builder)
+    public static WebApplicationBuilder ConfigureForRailway(this WebApplicationBuilder builder)
     {
         // Railway provides DATABASE_URL for PostgreSQL connections
         var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
@@ -17,11 +17,14 @@ public static class RailwayExtensions
             builder.Configuration["ConnectionStrings:OrderDb"] = connectionString;
         }
 
-        // Railway sets PORT environment variable
+        // Railway sets PORT environment variable - configure Kestrel directly to avoid warnings
         var port = Environment.GetEnvironmentVariable("PORT");
         if (!string.IsNullOrWhiteSpace(port))
         {
-            builder.Configuration["Kestrel:Endpoints:Http:Url"] = $"http://0.0.0.0:{port}";
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ListenAnyIP(int.Parse(port));
+            });
         }
 
         return builder;
