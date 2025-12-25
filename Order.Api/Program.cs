@@ -263,10 +263,11 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// HTTPS redirection - Skip in production on Railway (Railway proxy handles HTTPS)
-if (app.Environment.IsDevelopment())
+app.UseHttpsRedirection();
+
+// HSTS
+if (!app.Environment.IsDevelopment())
 {
-    app.UseHttpsRedirection();
     app.UseHsts();
 }
 
